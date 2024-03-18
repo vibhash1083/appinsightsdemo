@@ -8,9 +8,15 @@ appInsights.setup("<connection_string>")
     .start();
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+    let client = appInsights.defaultClient;
+    client.trackEvent({ name: "my custom event", properties: { customProperty: "finally it worked" } });
+    client.trackException({ exception: new Error("handled exceptions can be logged with this method") });
+    client.trackMetric({ name: "custom metric", value: 3 });
+    client.trackTrace({ message: "trace message" });
+    console.log("Hello World!");
+    res.send("Hello World!");
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}!`);
+    console.log(`Example app listening on port ${port}!`);
 });
